@@ -11,19 +11,15 @@ package trader;
  */
 public class Contract {
     
-    enum ContractType {
-        Forward, Futures, Option
-    }
-    
+      
     public String contractName;
-    public ContractType contractType;
     public int price;
     
-    public void Contract(String name, int price_buy, ContractType type){
+    Contract(String name, int price_buy){
         
         this.contractName = name;
         this.price = price_buy;
-        this.contractType = type;
+      
         
     }
             
