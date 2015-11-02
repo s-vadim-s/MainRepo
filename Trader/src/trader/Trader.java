@@ -41,7 +41,7 @@ public class Trader {
        CurrencyContract spotRUB = new CurrencyContract("RUBLES",t0_price );
        
        // new forward currency contract for 10 days for EXCHANE RATE = 35
-     //  CurrencyContract fwdRUB = new CurrencyContract("RUBLES", 35, 10);
+       CurrencyContract fwdRUB = new CurrencyContract("RUBLES", 35, 10);
       
        // Trade Robot creation
        TradeRobot myRobot = new TradeRobot(Cash, LIBOR);
