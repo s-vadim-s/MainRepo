@@ -5,25 +5,51 @@
  */
 package trader;
 
+import java.lang.Math;
+
 /**
  *
  * @author VSoldatov
  */
 public class TradeRobot {
     
-    private int balance;
-    private Contract asset;
-    private int asset_count;
+    private double balance;
+    private CurrencyContract asset;     // type of contract on balance
+    private int asset_count;   // num of contracts on balance
+    private double Libor;  // LIBOR rate
     
-     TradeRobot(int cash){
+    // creation of the Robot's balance
+     TradeRobot(double cash, double Libor){
         
          this.balance = cash;
-         
+         this.Libor = Libor;                          
     }
     
-     public boolean Buy ( Contract contract) {
+     // main function: execution of Order recieved
+     public boolean Execute ( Order order){
          
-         if ( this.balance >= contract.price) {
+         return true;
+         
+     }
+     
+     // Calculation of income got from investment for the years using LIBOR
+     private double LiborForecast(double cash, double years) {
+         double result = 0;
+         
+         /*
+            Capital = Cash * ( 1 + LIBOR  ) ^ num_years
+         */
+         
+         result = Math.pow((1+Libor), years);  // math exponent power
+         result = cash * result;
+         
+         return result;
+     }
+     
+     // Buing of the Currency contract
+     public boolean Buy ( CurrencyContract contract) {
+         
+         if ( this.balance >= contract.price) {   // buy only if we have money on balance
              
              this.asset = contract;
              
@@ -31,7 +57,7 @@ public class TradeRobot {
                  this.asset_count++;
                  this.balance = this.balance - contract.price;
                  
-             } while ( this.balance >= contract.price );
+             } while ( this.balance >= contract.price );  // buy until we have money
              
              return true;
              
@@ -43,13 +69,14 @@ public class TradeRobot {
          
      }
      
-     public boolean Sell ( int spot) {
+     // sell all contracts by spot price
+     public boolean Sell ( int spot_price, CurrencyContract contract) {
          
-         if ( this.asset != null) {
+         if ( this.asset != null) {   //  sell only if we have something to sell
              
-             if ( this.asset.price < spot ) {  // sell only if we have better price
+             if(  this.asset.price < spot_price )  {  // sell only if we got better price
                  
-                 this.balance = this.balance + spot * this.asset_count;
+                 this.balance = this.balance + spot_price * this.asset_count;
                  this.asset = null;
                  this.asset_count = 0;
                  
@@ -62,7 +89,20 @@ public class TradeRobot {
          
      }
      
-     public String GetAssetInfo() {
+     // returns the deal result in case if contracts will be sold by sport price
+     public double SellAnalysis ( int spot_price ) {
+         
+         if ( this.asset != null) {   //  sell only if we have something to sell
+             
+             return spot_price * this.asset_count ;
+                          
+         }
+         
+         return 0;
+     }
+     
+     
+     public String GetAssetInfo() {    // print status info
      
      String result;
      
@@ -71,7 +111,7 @@ public class TradeRobot {
          
      } else {
          
-         result = this.asset.contractName + " - " + this.asset_count ;
+         result = "We have " + this.asset_count + " " + this.asset.contractName   + " contracts ";
          
      }
      
@@ -80,9 +120,19 @@ public class TradeRobot {
      
      }
     
+     // forecast of income got from investment of Cash on LIBOR rate for 1 year
+     public double Forecast(){
+         
+         double result = 0;
+         
+         result = this.LiborForecast(this.balance, 1);
+         
+         return result;
+         
+     }
 
-     
-    public int GetBalance() {
+    // Robot's actual balance 
+    public double GetBalance() {
                 
         return this.balance;
                 

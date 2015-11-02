@@ -5,23 +5,21 @@
  */
 package trader;
 
+enum ContractType {
+    NA, CurrencyExchange, CurrencyForward, Option
+}
+
 /**
  *
  * @author VSoldatov
  */
-public class Contract {
+public interface Contract {
     
-      
-    public String contractName;
-    public int price;
+  public ContractType type = ContractType.NA;  // default value
     
-    Contract(String name, int price_buy){
-        
-        this.contractName = name;
-        this.price = price_buy;
-      
-        
-    }
-            
-    
+  public String Ticker = "";  
+  public String ContractName = "";
+  public int Price = 0;
+  
+     
 }
